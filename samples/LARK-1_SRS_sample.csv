@@ -1,0 +1,40 @@
+ID,Requirement,Section
+LARK-SYS-010,The LARK-1 spacecraft shall have a total mass not exceeding 4.0 kg including margins.,3.1 Mission and system
+LARK-SYS-020,The spacecraft shall fit within the 3U CubeSat envelope of 100 mm x 100 mm x 340.5 mm.,3.1 Mission and system
+LARK-SYS-030,The spacecraft shall operate for a mission lifetime of at least 2 years in a 520 km sun-synchronous orbit.,3.1 Mission and system
+LARK-SYS-040,The spacecraft shall be easy to integrate and shall be compatible with all commercial deployers.,3.1 Mission and system
+LARK-SYS-050,The spacecraft shall re-enter the atmosphere within 5 years after end of mission.,3.1 Mission and system
+LARK-SYS-060,The system should be designed with high reliability.,3.1 Mission and system
+LARK-SYS-070,The spacecraft shall comply with the launch provider interface control document [AD-3].,3.1 Mission and system
+LARK-EPS-010,The EPS shall provide a regulated 5 V ± 0.1 V bus with a maximum ripple of 50 mV peak-to-peak.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-020,The EPS shall provide adequate power to all subsystems in all modes.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-030,The battery shall have a capacity of 40 and shall be charged by the solar arrays.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-040,The EPS shall generate at least 7.5 W orbit-average power at end of life.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-050,The EPS shall switch the spacecraft to safe mode within 2 s when the battery voltage drops below 6.4 V.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-060,Shall protect the battery against overcharge and/or deep discharge.,3.2 Electrical power subsystem (EPS)
+LARK-EPS-070,"The EPS shall provide 3 switchable power lines to the payload, current limited to TBD mA.",3.2 Electrical power subsystem (EPS)
+LARK-OBC-010,The OBC shall boot into safe mode within 30 s after power-on.,3.3 On-board computer and software (OBC)
+LARK-OBC-020,The on-board software shall be user-friendly and fast.,3.3 On-board computer and software (OBC)
+LARK-OBC-030,The OBC shall store at least 2 GB of payload data.,3.3 On-board computer and software (OBC)
+LARK-OBC-040,The on-board software shall never crash under any conditions.,3.3 On-board computer and software (OBC)
+LARK-OBC-050,Telecommands shall be time-tagged and executed as appropriate.,3.3 On-board computer and software (OBC)
+LARK-OBC-060,The OBC shall reject telecommands with an invalid CRC and shall increment the rejected-command counter by 1.,3.3 On-board computer and software (OBC)
+LARK-OBC-070,The on-board software shall be written in C and comply with the project coding standard [AD-5].,3.3 On-board computer and software (OBC)
+LARK-OBC-080,The watchdog shall reset the OBC if it is not serviced within 10.,3.3 On-board computer and software (OBC)
+LARK-COM-010,The UHF transceiver shall transmit telemetry at a data rate of 9.6 kbps.,3.4 Communications (COM)
+LARK-COM-020,The S-band downlink shall provide a link margin of at least 3 dB at 10 deg elevation.,3.4 Communications (COM)
+LARK-COM-030,"The communication system will support various ground stations, etc.",3.4 Communications (COM)
+LARK-COM-040,The UHF antenna shall deploy no earlier than 30 min after separation from the deployer.,3.4 Communications (COM)
+LARK-COM-050,The S-band transmitter shall not transmit before the ground has sent the TX-enable command.,3.4 Communications (COM)
+LARK-COM-060,The spacecraft shall maintain contact with the ground as far as possible.,3.4 Communications (COM)
+LARK-ADC-010,The ADCS shall point the payload boresight with an accuracy better than 1 deg (3 sigma).,3.5 Attitude determination and control (ADCS)
+LARK-ADC-020,The ADCS shall detumble the spacecraft from 10 deg/s to below 0.5 deg/s within 3 orbits.,3.5 Attitude determination and control (ADCS)
+LARK-ADC-030,"The ADCS shall provide sufficient pointing stability for imaging, TBC.",3.5 Attitude determination and control (ADCS)
+LARK-ADC-040,The ADCS shall use a Kalman filter for attitude estimation.,3.5 Attitude determination and control (ADCS)
+LARK-PLD-010,The payload camera shall acquire images with a ground sampling distance of 30 m from 520 km altitude.,"3.6 Payload, structure and environment"
+LARK-STR-010,The structure shall withstand the qualification random vibration levels of [AD-4] without damage.,"3.6 Payload, structure and environment"
+LARK-STR-020,The first natural frequency of the spacecraft shall be above 100 Hz.,"3.6 Payload, structure and environment"
+LARK-STR-030,All external surfaces shall be labelled with the spacecraft serial number.,"3.6 Payload, structure and environment"
+LARK-THR-010,The thermal control shall keep the battery between 0 °C and 40 °C in all operational modes.,"3.6 Payload, structure and environment"
+LARK-THR-020,The thermal design shall keep it within limits.,"3.6 Payload, structure and environment"
+LARK-STR-040,"The spacecraft shall be provided with a remove-before-flight pin accessible after integration into the deployer, it shall be colored red, and it shall be included in the delivered hardware with documentation describing how it is installed and removed by the integration team at the launch site.","3.6 Payload, structure and environment"

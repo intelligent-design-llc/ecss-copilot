@@ -1,0 +1,28 @@
+# Python / tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Demo outputs (regenerate with scripts/demo.py); only README screenshots are tracked
+demo/*
+!demo/ui_high_findings.png
+!demo/ui_overview.png
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

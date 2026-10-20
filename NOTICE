@@ -1,0 +1,12 @@
+ECSS Copilot
+Copyright 2026 Intelligent Design LLC
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+ECSS Copilot is an independent project. It is not affiliated with, endorsed by, or
+sponsored by the European Cooperation for Space Standardization (ECSS), the European
+Space Agency (ESA), or any other agency. "ECSS" is used only to describe the
+standards family that the tool's checks are inspired by. No ECSS standard text is
+included in this distribution.
+
+The sample requirements in samples/ are synthetic and describe a fictional spacecraft.

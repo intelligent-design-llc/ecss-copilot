@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ECSS Copilot (prototype) - Intelligent Design LLC</title>
+<style>
+  :root { --navy:#1f3a5f; --red:#b42318; --amber:#fff4ce; --hi:#f8d7da; --med:#ffe8c2; --lo:#e2eef9; --ok:#d4edda; --border:#d7dce3; }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:#1b2430; background:#f5f7fa; }
+  header { background:var(--navy); color:#fff; padding:14px 28px; display:flex; align-items:center; gap:14px; }
+  header h1 { font-size:20px; margin:0; } header .tag { opacity:.8; font-size:13px; }
+  header .ver { margin-left:auto; font-size:12px; opacity:.75; }
+  .banner { background:var(--amber); border-bottom:2px solid #e0b100; padding:10px 28px; font-size:13px; }
+  .banner strong { color:var(--red); }
+  main { max-width:1280px; margin:0 auto; padding:20px 28px 60px; }
+  .card { background:#fff; border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:18px; }
+  .input-grid { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  textarea { width:100%; height:130px; font: 12px/1.4 ui-monospace, Menlo, monospace; border:1px solid var(--border); border-radius:6px; padding:8px; }
+  .drop { border:2px dashed #9fb3c8; border-radius:8px; padding:18px; text-align:center; background:#f8fbff; height:130px; display:flex; flex-direction:column; justify-content:center; gap:8px; }
+  button { background:var(--navy); color:#fff; border:0; border-radius:6px; padding:9px 16px; font-weight:600; cursor:pointer; }
+  button.secondary { background:#fff; color:var(--navy); border:1px solid var(--navy); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .actions { display:flex; gap:10px; align-items:center; margin-top:14px; flex-wrap:wrap; }
+  .muted { color:#5b6776; font-size:12px; }
+  .stats { display:grid; grid-template-columns: repeat(6, 1fr); gap:12px; }
+  .stat { background:#fff; border:1px solid var(--border); border-radius:10px; padding:12px; }
+  .stat .n { font-size:24px; font-weight:700; color:var(--navy); } .stat .l { font-size:12px; color:#5b6776; }
+  .stat.hi .n { color:var(--red); } .stat.med .n { color:#a15c00; } .stat.lo .n { color:#2a5d8f; }
+  .bars { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+  .bar { display:flex; align-items:center; gap:8px; font-size:12px; margin:3px 0; }
+  .bar .lbl { width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bar .b { height:12px; background:#5b84b1; border-radius:3px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th { text-align:left; background:#eef2f7; padding:8px; border-bottom:1px solid var(--border); position:sticky; top:0; }
+  td { padding:8px; border-bottom:1px solid #eceff3; vertical-align:top; }
+  td.id { font-family: ui-monospace, Menlo, monospace; font-size:12px; white-space:nowrap; }
+  .score { display:inline-block; min-width:38px; text-align:center; border-radius:5px; padding:2px 6px; font-weight:700; }
+  .s-hi { background:var(--hi); } .s-med { background:var(--med); } .s-ok { background:var(--ok); }
+  .pill { display:inline-block; border-radius:10px; padding:1px 8px; font-size:11px; font-weight:600; margin:0 4px 4px 0; }
+  .High { background:var(--hi); color:#7a1010; } .Medium { background:var(--med); color:#7a4300; } .Low { background:var(--lo); color:#1d4a75; }
+  .method { font-weight:600; color:var(--navy); white-space:nowrap; }
+  .finding { margin:4px 0 6px; font-size:12px; } .finding .fix { color:#2f5d34; }
+  .llm { background:#f1f7ee; border-left:3px solid #4a8a3c; padding:6px 8px; margin-top:6px; font-size:12px; }
+  .filters { display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+  .err { color:var(--red); font-weight:600; }
+  .hidden { display:none; }
+  footer { text-align:center; color:#7b8794; font-size:12px; padding:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ECSS Copilot</h1><span class="tag">Requirement quality checks &amp; verification-matrix draft</span>
+  <span class="ver" id="ver">prototype</span>
+</header>
+<div class="banner" role="alert">
+  <strong>&#9888; Do not upload ITAR/EAR- or otherwise export-controlled, classified, or confidential data you are not authorised to share.</strong>
+  All results are <strong>advisory drafts</strong> for engineering review and require human sign-off. Files are processed in memory and not stored.
+  <span id="llmnote"></span>
+</div>
+<main>
+  <section class="card">
+    <div class="input-grid">
+      <div>
+        <b>1. Upload a requirements document</b>
+        <div class="drop">
+          <input type="file" id="file" accept=".docx,.pdf,.csv,.xlsx,.txt,.md,.reqif,.xml">
+          <div class="muted">DOCX, PDF (text layer), CSV, XLSX, TXT, ReqIF (beta)</div>
+        </div>
+      </div>
+      <div>
+        <b>&hellip; or paste requirement text</b>
+        <textarea id="text" placeholder="SYS-010 The spacecraft shall ...&#10;SYS-020 The EPS shall provide 5 V &plusmn; 0.1 V ..."></textarea>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="go">Analyse</button>
+      <button id="llm" class="secondary" disabled title="Set LLM_BASE_URL, LLM_MODEL (and LLM_API_KEY) on the server">LLM rewrite pass</button>
+      <button id="xlsx" class="secondary" disabled>Export XLSX</button>
+      <span id="status" class="muted"></span>
+    </div>
+  </section>
+
+  <section id="results" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="card bars" style="margin-top:18px">
+      <div><b>Findings by check</b><div id="byrule"></div></div>
+      <div><b>Draft verification methods</b><div id="bymethod"></div></div>
+    </div>
+    <div class="card">
+      <div class="filters">
+        <b>Requirements</b>
+        <label><input type="checkbox" id="onlyflag"> only with findings</label>
+        <label>min severity
+          <select id="sev"><option value="">any</option><option>High</option><option>Medium</option></select></label>
+        <span class="muted" id="src"></span>
+      </div>
+      <table>
+        <thead><tr><th>ID</th><th style="width:38%">Requirement</th><th>Score</th><th style="width:38%">Findings &amp; suggested fixes</th><th>Draft method</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<footer>ECSS Copilot prototype &middot; Intelligent Design LLC &middot; Checks are inspired by public requirement-writing guidance (e.g. ECSS-E-ST-10-06 characteristics); no ECSS text is reproduced.</footer>
+<script>
+let RESULT = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+fetch("/api/config").then(r => r.json()).then(c => {
+  $("ver").textContent = "v" + c.version + " prototype";
+  if (c.llm.enabled) {
+    $("llm").title = "Sends ONLY flagged requirements to " + c.llm.base_url + " (" + c.llm.model + ")";
+    $("llmnote").innerHTML = " LLM configured: <b>" + esc(c.llm.model) + "</b> at " + esc(c.llm.base_url) + " (used only when you click 'LLM rewrite pass').";
+    $("llm").dataset.enabled = "1";
+  } else {
+    $("llmnote").textContent = " Running rule-based only (no LLM configured; nothing leaves this server).";
+  }
+});
+
+$("go").onclick = async () => {
+  const fd = new FormData();
+  const f = $("file").files[0];
+  if (f) fd.append("file", f); else fd.append("text", $("text").value);
+  $("status").textContent = "Analysing...";
+  const r = await fetch("/api/analyze", { method: "POST", body: fd });
+  const j = await r.json();
+  if (!r.ok) { $("status").innerHTML = '<span class="err">' + esc(j.detail) + "</span>"; return; }
+  RESULT = j; render(); $("status").textContent = "Done.";
+};
+
+$("llm").onclick = async () => {
+  if (!RESULT) return;
+  const n = RESULT.requirements.filter(r => r.findings.length).length;
+  if (!confirm("Send " + n + " flagged requirement texts to the configured LLM endpoint?\nOnly do this if the data is not export-controlled and you may share it with that provider.")) return;
+  $("status").textContent = "LLM pass running...";
+  const r = await fetch("/api/llm", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(RESULT) });
+  const j = await r.json();
+  if (!r.ok) { $("status").innerHTML = '<span class="err">' + esc(j.detail) + "</span>"; return; }
+  RESULT = j; render();
+  $("status").textContent = "LLM pass done" + (j.llm_errors && j.llm_errors.length ? " with errors: " + j.llm_errors.join("; ") : ".");
+};
+
+$("xlsx").onclick = async () => {
+  const r = await fetch("/api/export", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(RESULT) });
+  const blob = await r.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "ecss-copilot-report.xlsx"; a.click();
+};
+$("onlyflag").onchange = render; $("sev").onchange = render;
+
+function bars(el, obj) {
+  const max = Math.max(1, ...Object.values(obj));
+  el.innerHTML = Object.entries(obj).map(([k, v]) =>
+    `<div class="bar"><span class="lbl" title="${esc(k)}">${esc(k)}</span><span class="b" style="width:${Math.round(v / max * 220)}px"></span><span>${v}</span></div>`).join("");
+}
+
+function render() {
+  const s = RESULT.summary;
+  $("results").classList.remove("hidden");
+  $("xlsx").disabled = false;
+  $("llm").disabled = !$("llm").dataset.enabled;
+  $("src").textContent = "Source: " + RESULT.source + " \u00b7 " + RESULT.generated_at;
+  $("stats").innerHTML = [
+    ["", s.requirements, "requirements extracted"], ["", s.findings, "findings"],
+    ["hi", s.by_severity.High, "High"], ["med", s.by_severity.Medium, "Medium"], ["lo", s.by_severity.Low, "Low"],
+    ["", s.average_score, "avg quality score / 100"]
+  ].map(([c, n, l]) => `<div class="stat ${c}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join("");
+  bars($("byrule"), s.by_rule); bars($("bymethod"), s.verification_methods);
+  const only = $("onlyflag").checked, minsev = $("sev").value;
+  const rank = {High: 0, Medium: 1, Low: 2};
+  $("rows").innerHTML = RESULT.requirements.filter(r => {
+    if (only && !r.findings.length) return false;
+    if (minsev && !r.findings.some(f => rank[f.severity] <= rank[minsev])) return false;
+    return true;
+  }).map(r => {
+    const sc = r.score < 50 ? "s-hi" : r.score < 80 ? "s-med" : "s-ok";
+    const fs = r.findings.length ? r.findings.map(f =>
+      `<div class="finding"><span class="pill ${f.severity}">${f.severity}</span><b>${esc(f.rule_name)}</b>${f.match ? " <i>(" + esc(f.match) + ")</i>" : ""}<br>${esc(f.message)}<br><span class="fix">&rarr; ${esc(f.suggestion)}</span></div>`).join("")
+      : '<span class="muted">No issues found by the rule set.</span>';
+    const llm = r.llm ? `<div class="llm"><b>LLM suggestion (${esc(r.llm.model)}):</b> ${esc(r.llm.rewrite)}</div>` : "";
+    const v = r.verification, lm = r.llm && r.llm.verification_method;
+    return `<tr><td class="id">${esc(r.id)}<div class="muted">${esc(r.source)}</div></td><td>${esc(r.text)}${llm}</td>
+      <td><span class="score ${sc}">${r.score}</span></td><td>${fs}</td>
+      <td><span class="method">${esc(lm || v.primary)}</span>${v.secondary ? '<div class="muted">+ ' + esc(v.secondary) + "</div>" : ""}<div class="muted">${esc(lm ? r.llm.rationale : v.rationale)}</div></td></tr>`;
+  }).join("");
+}
+</script>
+</body>
+</html>
