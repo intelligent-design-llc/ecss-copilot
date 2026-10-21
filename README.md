@@ -1,6 +1,6 @@
 # ECSS Copilot
 
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/intelligent-design-llc/ecss-copilot/actions/workflows/ci.yml/badge.svg)](https://github.com/intelligent-design-llc/ecss-copilot/actions/workflows/ci.yml) [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 
 **An open-source requirement-quality checker and verification-matrix drafter for space projects that follow ECSS-style requirement practice.**
 
